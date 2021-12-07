@@ -1,4 +1,7 @@
+import com.mysql.jdbc.ResultSet;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,47 +11,82 @@ import java.sql.SQLException;
 public class App {
 
     private JPasswordField passwordField;
-    private JTextField textField;
+    private JTextField usernameField;
     private JButton belepesButton;
+    private Db dbcontroller;
     private JPanel panelBelepes;
 
-    public App() {
+    public App()   {
+        this.dbcontroller = new Db();
+        this.dbcontroller.connectDatabase();
+
         belepesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                if(usernameField.getText().isEmpty() || passwordField.getText().isEmpty()){
+                    if(usernameField.getText().isEmpty()){
+                        usernameField.setBorder(BorderFactory.createLineBorder(Color.red));
+                    }else{
+                        usernameField.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+                    if(passwordField.getText().isEmpty()){
+                        passwordField.setBorder(BorderFactory.createLineBorder(Color.red));
+                    }else{
+                        passwordField.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+                }else{
+                    String usernameGiven = usernameField.getText();
+                    String passwordGiven = passwordField.getText();
 
+                     ResultSet resultSet = (ResultSet) dbcontroller.sqlSelect("SELECT * FROM users");
+
+                    try{
+                        int isTeacher = 0;
+
+                        while (resultSet.next()){
+                            if(resultSet.getString("username").equals(usernameGiven)){
+                                isTeacher = Integer.parseInt(resultSet.getString("isTeacher"));
+
+                                if(resultSet.getString("password").equals(passwordGiven)){
+                                    System.out.println("Bejelentkezés sikeres");
+                                    if(isTeacher == 1){
+                                        JFrame frame = new JFrame("Tárgy kiírás");
+                                        frame.getContentPane().add(new TanarForm().getPanelTanar());
+                                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                        frame.pack();
+                                        frame.setLocationRelativeTo(null);
+                                        frame.setVisible(true);
+                                    }else{
+                                        JFrame frame = new JFrame("Tárgy felvétel");
+                                        frame.getContentPane().add(new HallgatoForm().getPanelHallgato());
+                                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                        frame.pack();
+                                        frame.setLocationRelativeTo(null);
+                                        frame.setVisible(true);
+                                    }
+                                }else{
+                                    System.out.println("Hibás a jelszó");
+                                }
+                            }else{
+                                System.out.println("Hibás a felhasználónév");
+                            }
+                        }
+                    }catch (SQLException ee){
+                        ee.printStackTrace();
+                    }
+                }
             }
         });
     }
 
     public static void main(String[] args) {
 
-        String url = "jdbc:mysql://localhost:3306/rft";
-        String username = "rftuser";
-        String password = "WfpgDbIxJEShq9Zn";
-
-        System.out.println("Loading driver...");
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Driver loaded!");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Cannot find the driver in the classpath!", e);
-        }
-
-        System.out.println("Connecting database...");
-
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            System.out.println("Database connected!");
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-
         JFrame frame = new JFrame("App");
         frame.getContentPane().add(new App().panelBelepes);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
