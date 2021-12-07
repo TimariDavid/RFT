@@ -26,7 +26,7 @@ public class App {
 
         String url = "jdbc:mysql://localhost:3306/rft";
         String username = "rftuser";
-        String password = "rklBLpiccvBpYeDn";
+        String password = "WfpgDbIxJEShq9Zn";
 
         System.out.println("Loading driver...");
 
