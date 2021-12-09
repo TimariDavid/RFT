@@ -42,7 +42,7 @@ public class App {
                      ResultSet resultSet = (ResultSet) dbcontroller.sqlSelect("SELECT * FROM users");
 
                     try{
-                        int isTeacher = 0;
+                        int isTeacher = -1;
 
                         while (resultSet.next()){
                             if(resultSet.getString("username").equals(usernameGiven)){
