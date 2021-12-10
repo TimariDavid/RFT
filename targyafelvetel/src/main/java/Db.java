@@ -77,11 +77,20 @@ public class Db {
         try{
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sqlcode);
-
         } catch (SQLException e){
             throw new RuntimeException("Failed the select.");
         }
 
         return resultSet;
+    }
+
+    public void uploadSubjects(String sqlcode){
+
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeQuery(sqlcode);
+        }catch (SQLException ee){
+            ee.printStackTrace();
+        }
     }
 }
