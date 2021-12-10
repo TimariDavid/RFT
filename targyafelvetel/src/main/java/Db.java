@@ -48,7 +48,7 @@ public class Db {
     public void connectDatabase(){
         setUrl("jdbc:mysql://localhost:3306/rft");
         setUsername("rftuser");
-        setPassword("WfpgDbIxJEShq9Zn");
+        setPassword("9R]Y/Hh3U147VUt5");
 
         System.out.println("Loading driver...");
 
@@ -79,7 +79,7 @@ public class Db {
             resultSet = statement.executeQuery(sqlcode);
 
         } catch (SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Failed the select.");
         }
 
         return resultSet;
