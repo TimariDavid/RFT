@@ -17,9 +17,9 @@ public class TanarForm {
                 String subjectName = targynevField.getText();
                 String whatTime = idoField.getText();
 
-                //String sql = "INSERT INTO subjects (name, what_time) VALUES ("+"'"+subjectName+"'"+", "+"'"+whataTime+"'"+")";
-                String sql = "INSERT INTO subjects (name, what_time) VALUES ('Teszt', 'Teszt')";
-                System.out.println(sql);
+                String sql = "INSERT INTO subjects (name, what_time) VALUES ("+"'"+subjectName+"'"+", "+"'"+whatTime+"'"+")";
+                //String sql = "INSERT INTO subjects (name, what_time) VALUES ('Teszt', 'Teszt')";
+                dbConnector = Db.getInstance();
                 dbConnector.uploadSubjects(sql);
             }
         });

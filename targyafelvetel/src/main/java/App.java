@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class App {
@@ -13,12 +11,11 @@ public class App {
     private JPasswordField passwordField;
     private JTextField usernameField;
     private JButton belepesButton;
-    private Db dbcontroller;
+    private Db dbConnector;
     private JPanel panelBelepes;
 
     public App()   {
-        this.dbcontroller = new Db();
-        this.dbcontroller.connectDatabase();
+        this.dbConnector = Db.getInstance();
 
         belepesButton.addActionListener(new ActionListener() {
             @Override
@@ -39,7 +36,7 @@ public class App {
                     String usernameGiven = usernameField.getText();
                     String passwordGiven = passwordField.getText();
 
-                     ResultSet resultSet = (ResultSet) dbcontroller.sqlSelect("SELECT * FROM users");
+                     ResultSet resultSet = (ResultSet) dbConnector.sqlSelect("SELECT * FROM users");
 
                     try{
                         int isTeacher = -1;

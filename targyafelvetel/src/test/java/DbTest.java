@@ -18,7 +18,7 @@ public class DbTest {
     @Test
     public void testConnectionDatabase() throws SQLException {
         // given
-        underTest = new Db("jdbc:mysql://localhost:3306/rft", "rftuser", "9R]Y/Hh3U147VUt5");
+        underTest = Db.getInstance("jdbc:mysql://localhost:3306/rft", "rftuser", "rKi9F3cyxn2JVJmD");
 
         // when
 

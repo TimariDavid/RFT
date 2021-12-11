@@ -6,15 +6,28 @@ public class Db {
     private String password;
     private Connection connection;
 
-    public Db(String url, String username, String password) {
+    private static Db db = null;
+
+    private Db(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
     }
 
-    public Db() {
-
+    public static Db getInstance(){
+        if(db == null) {
+            db = new Db("jdbc:mysql://localhost:3306/rft", "rftuser", "rKi9F3cyxn2JVJmD");
+            db.connectDatabase();
+        }
+        return db;
     }
+
+    public static Db getInstance(String url, String username, String password){
+        db = new Db(url, username, password);
+        db.connectDatabase();
+        return db;
+    }
+
 
     public String getUrl() {
         return url;
@@ -45,10 +58,7 @@ public class Db {
         return"URL: " + url + "\nUsername: " + username + "\npassword: " + password;
     }
 
-    public void connectDatabase(){
-        setUrl("jdbc:mysql://localhost:3306/rft");
-        setUsername("rftuser");
-        setPassword("9R]Y/Hh3U147VUt5");
+    private void connectDatabase(){
 
         System.out.println("Loading driver...");
 
@@ -88,7 +98,7 @@ public class Db {
 
         try{
             Statement statement = connection.createStatement();
-            statement.executeQuery(sqlcode);
+            statement.execute(sqlcode);
         }catch (SQLException ee){
             ee.printStackTrace();
         }
