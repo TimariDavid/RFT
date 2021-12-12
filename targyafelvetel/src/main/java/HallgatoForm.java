@@ -18,7 +18,7 @@ public class HallgatoForm {
 
     public HallgatoForm() {
         this.dbConnector = Db.getInstance();
-        Map<Integer,String> targyak = new HashMap<Integer,String>();
+        HashMap<Integer,String> targyak = new HashMap<Integer,String>();
 
         subjectsList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         subjectsList.setLayoutOrientation(JList.VERTICAL_WRAP);

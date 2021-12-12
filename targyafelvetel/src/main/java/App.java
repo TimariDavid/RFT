@@ -13,14 +13,18 @@ public class App {
     private JButton belepesButton;
     private Db dbConnector;
     private JPanel panelBelepes;
-    private int userId;
+    private JCheckBox ch_isTeacher;
+    private JPasswordField isTeacherField;
+    private JLabel labelForTeacher;
+    private static int userId;
+    private final int teacherValidator = 0000;
 
 
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    private void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -31,59 +35,89 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if(usernameField.getText().isEmpty() || passwordField.getText().isEmpty()){
-                    if(usernameField.getText().isEmpty()){
-                        usernameField.setBorder(BorderFactory.createLineBorder(Color.red));
+                if(ch_isTeacher.isSelected()){
+                    if(isTeacherField.getText().isEmpty()){
+                        isTeacherField.setBorder(BorderFactory.createLineBorder(Color.red));
                     }else{
-                        usernameField.setBorder(BorderFactory.createLineBorder(Color.black));
-                    }
-                    if(passwordField.getText().isEmpty()){
-                        passwordField.setBorder(BorderFactory.createLineBorder(Color.red));
-                    }else{
-                        passwordField.setBorder(BorderFactory.createLineBorder(Color.black));
+                        isTeacherField.setBorder(BorderFactory.createLineBorder(Color.black));
+                        if(Integer.parseInt(isTeacherField.getText()) == teacherValidator){
+                            String sql = "INSERT INTO users (username, password, isTeacher) VALUES ("+"'"+usernameField.getText()+"'"+", "+"'"+passwordField.getText()+"'"+", "+"'1'"+")";
+                            dbConnector.sqlInsert(sql);
+                        }else{
+                            isTeacherField.setBorder(BorderFactory.createLineBorder(Color.red));
+                        }
                     }
                 }else{
-                    String usernameGiven = usernameField.getText();
-                    String passwordGiven = passwordField.getText();
+                    if(usernameField.getText().isEmpty() || passwordField.getText().isEmpty()){
+                        if(usernameField.getText().isEmpty()){
+                            usernameField.setBorder(BorderFactory.createLineBorder(Color.red));
+                        }else{
+                            usernameField.setBorder(BorderFactory.createLineBorder(Color.black));
+                        }
+                        if(passwordField.getText().isEmpty()){
+                            passwordField.setBorder(BorderFactory.createLineBorder(Color.red));
+                        }else{
+                            passwordField.setBorder(BorderFactory.createLineBorder(Color.black));
+                        }
+                    }else{
+                        String usernameGiven = usernameField.getText();
+                        String passwordGiven = passwordField.getText();
 
-                     ResultSet resultSet = (ResultSet) dbConnector.sqlSelect("SELECT * FROM users");
+                        ResultSet resultSet = (ResultSet) dbConnector.sqlSelect("SELECT * FROM users");
 
-                    try{
-                        int isTeacher = -1;
+                        try{
+                            int isTeacher = -1;
 
-                        while (resultSet.next()){
-                            if(resultSet.getString("username").equals(usernameGiven)){
-                                isTeacher = Integer.parseInt(resultSet.getString("isTeacher"));
+                            while (resultSet.next()){
+                                if(resultSet.getString("username").equals(usernameGiven)){
+                                    isTeacher = Integer.parseInt(resultSet.getString("isTeacher"));
 
-                                if(resultSet.getString("password").equals(passwordGiven)){
-                                    System.out.println("Bejelentkezés sikeres");
-                                    setUserId(resultSet.getInt("ID"));
-                                    System.out.println(getUserId());
-                                    if(isTeacher == 1){
-                                        JFrame frame = new JFrame("Tárgy kiírás");
-                                        frame.getContentPane().add(new TanarForm().getPanelTanar());
-                                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                        frame.pack();
-                                        frame.setLocationRelativeTo(null);
-                                        frame.setVisible(true);
+                                    if(resultSet.getString("password").equals(passwordGiven)){
+                                        System.out.println("Bejelentkezés sikeres");
+                                        setUserId(resultSet.getInt("ID"));
+                                        System.out.println(getUserId());
+                                        if(isTeacher == 1){
+                                            JFrame frameTanar = new JFrame("Tárgy kiírás");
+                                            frameTanar.getContentPane().add(new TanarForm().getPanelTanar());
+                                            frameTanar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                            frameTanar.pack();
+                                            frameTanar.setLocationRelativeTo(null);
+                                            panelBelepes.setVisible(false);
+                                            frameTanar.setVisible(true);
+                                        }else{
+                                            JFrame frameHallgato = new JFrame("Tárgy felvétel");
+                                            frameHallgato.getContentPane().add(new HallgatoForm().getPanelHallgato());
+                                            frameHallgato.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                            frameHallgato.pack();
+                                            frameHallgato.setLocationRelativeTo(null);
+                                            panelBelepes.setVisible(false);
+                                            frameHallgato.setVisible(true);
+                                        }
                                     }else{
-                                        JFrame frame = new JFrame("Tárgy felvétel");
-                                        frame.getContentPane().add(new HallgatoForm().getPanelHallgato());
-                                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                        frame.pack();
-                                        frame.setLocationRelativeTo(null);
-                                        frame.setVisible(true);
+                                        passwordField.setBorder(BorderFactory.createLineBorder(Color.red));
                                     }
                                 }else{
-                                    System.out.println("Hibás a jelszó");
+                                    usernameField.setBorder(BorderFactory.createLineBorder(Color.red));
                                 }
-                            }else{
-                                System.out.println("Hibás a felhasználónév");
                             }
+                        }catch (SQLException ee){
+                            ee.printStackTrace();
                         }
-                    }catch (SQLException ee){
-                        ee.printStackTrace();
                     }
+                }
+            }
+        });
+        ch_isTeacher.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(ch_isTeacher.isSelected()){
+                    belepesButton.setText("Regisztráció");
+                    isTeacherField.setVisible(true);
+                    labelForTeacher.setVisible(true);
+                }else{
+                    belepesButton.setText("Belépés");
+                    isTeacherField.setVisible(false);
+                    labelForTeacher.setVisible(false);
                 }
             }
         });
@@ -97,6 +131,7 @@ public class App {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setSize(400,300);
     }
 
 }
