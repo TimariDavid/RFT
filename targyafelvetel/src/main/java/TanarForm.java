@@ -18,7 +18,6 @@ public class TanarForm {
                 String whatTime = idoField.getText();
 
                 String sql = "INSERT INTO subjects (name, what_time) VALUES ("+"'"+subjectName+"'"+", "+"'"+whatTime+"'"+")";
-                //String sql = "INSERT INTO subjects (name, what_time) VALUES ('Teszt', 'Teszt')";
                 dbConnector = Db.getInstance();
                 dbConnector.sqlInsert(sql);
             }

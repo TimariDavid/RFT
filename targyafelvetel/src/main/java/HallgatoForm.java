@@ -14,11 +14,12 @@ public class HallgatoForm {
     private JButton buttonFelvesz;
     private JPanel panelHallgato;
     private JButton buttonReload;
+    private JLabel labelInfo;
     private Db dbConnector;
 
     public HallgatoForm() {
         this.dbConnector = Db.getInstance();
-        Map<Integer,String> targyak = new HashMap<Integer,String>();
+        HashMap<Integer,String> targyak = new HashMap<Integer,String>();
 
         subjectsList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         subjectsList.setLayoutOrientation(JList.VERTICAL_WRAP);
@@ -63,6 +64,30 @@ public class HallgatoForm {
                 }
             }
         });
+        subjectsList.getSelectionModel().addListSelectionListener(e -> {
+            String targy = subjectsList.getSelectedValue().toString();
+            for (Map.Entry<Integer, String> entry : targyak.entrySet()){
+                if(entry.getValue().equals(targy)){
+                    int sqlId = entry.getKey();
+                    ResultSet resultSet = (ResultSet) dbConnector.sqlSelect("SELECT what_time FROM subjects WHERE ID = "+sqlId+";");
+                    try {
+                        String sad = resultSet.getString("what_time");
+                        System.out.println(sad);
+                        //labelInfo.setText(resultSet.getString("what_time"));
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public JButton getButtonReload() {
+        return buttonReload;
+    }
+
+    public void setButtonReload(JButton buttonReload) {
+        this.buttonReload = buttonReload;
     }
 
     public JList getSubjectsList() {
