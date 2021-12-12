@@ -13,6 +13,16 @@ public class App {
     private JButton belepesButton;
     private Db dbConnector;
     private JPanel panelBelepes;
+    private int userId;
+
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public App()   {
         this.dbConnector = Db.getInstance();
@@ -47,6 +57,8 @@ public class App {
 
                                 if(resultSet.getString("password").equals(passwordGiven)){
                                     System.out.println("Bejelentkezés sikeres");
+                                    setUserId(resultSet.getInt("ID"));
+                                    System.out.println(getUserId());
                                     if(isTeacher == 1){
                                         JFrame frame = new JFrame("Tárgy kiírás");
                                         frame.getContentPane().add(new TanarForm().getPanelTanar());

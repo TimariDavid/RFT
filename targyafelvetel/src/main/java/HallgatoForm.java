@@ -21,7 +21,7 @@ public class HallgatoForm {
         Map<Integer,String> targyak = new HashMap<Integer,String>();
 
         subjectsList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        subjectsList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        subjectsList.setLayoutOrientation(JList.VERTICAL_WRAP);
         subjectsList.setVisibleRowCount(-1);
 
 
@@ -35,18 +35,32 @@ public class HallgatoForm {
 
                 ResultSet resultSet = (ResultSet) dbConnector.sqlSelect("SELECT * FROM subjects");
                 DefaultListModel model = new DefaultListModel();
+                subjectsList.setModel(model);
 
                 try{
                     while (resultSet.next()){
                         targyak.put(resultSet.getInt("ID"),resultSet.getString("name"));
-                        String tmp = resultSet.getString("name");
-                        model.addElement(tmp);
+                        model.addElement(resultSet.getString("name"));
                     }
                 }catch (SQLException h){
                     h.printStackTrace();
                 }
-                subjectsList = new JList(model);
-                subjectsList.setVisible(true);
+            }
+        });
+        buttonFelvesz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String subjectName = subjectsList.getSelectedValue().toString();
+
+                App hallgato = new App();
+                System.out.println(hallgato.getUserId());
+
+                for (Map.Entry<Integer, String> entry : targyak.entrySet()) {
+                    if(entry.getValue().equals(subjectName)){
+                        String sql = "INSERT INTO connector (user_id, subject_id) VALUES ("+"'"+hallgato.getUserId()+"'"+", "+"'"+entry.getKey()+"'"+")";
+                        dbConnector.sqlInsert(sql);
+                    }
+                }
             }
         });
     }

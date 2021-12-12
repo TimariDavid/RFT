@@ -94,7 +94,7 @@ public class Db {
         return resultSet;
     }
 
-    public void uploadSubjects(String sqlcode){
+    public void sqlInsert(String sqlcode){
 
         try{
             Statement statement = connection.createStatement();
