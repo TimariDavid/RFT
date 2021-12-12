@@ -13,7 +13,7 @@ public class App {
     private JButton belepesButton;
     private Db dbConnector;
     private JPanel panelBelepes;
-    private int userId;
+    private static int userId;
 
 
     public int getUserId() {
