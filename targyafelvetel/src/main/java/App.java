@@ -1,4 +1,5 @@
 import com.mysql.jdbc.ResultSet;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,14 +35,15 @@ public class App {
         belepesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                SCryptPasswordEncoder sCrypt = new SCryptPasswordEncoder();
                 if(ch_isTeacher.isSelected()){
                     if(isTeacherField.getText().isEmpty()){
-                        isTeacherField.setBorder(BorderFactory.createLineBorder(Color.red));
+                        String sql = "INSERT INTO users (username, password, isTeacher) VALUES ("+"'"+usernameField.getText()+"'"+", "+"'"+sCrypt.encode(passwordField.getText())+"'"+", "+"'0'"+")";
+                        dbConnector.sqlInsert(sql);
                     }else{
-                        isTeacherField.setBorder(BorderFactory.createLineBorder(Color.black));
                         if(Integer.parseInt(isTeacherField.getText()) == teacherValidator){
-                            String sql = "INSERT INTO users (username, password, isTeacher) VALUES ("+"'"+usernameField.getText()+"'"+", "+"'"+passwordField.getText()+"'"+", "+"'1'"+")";
+                            String sql = "INSERT INTO users (username, password, isTeacher) VALUES ("+"'"+usernameField.getText()+"'"+", "+"'"+sCrypt.encode(passwordField.getText())+"'"+", "+"'1'"+")";
+                            isTeacherField.setBorder(BorderFactory.createLineBorder(Color.black));
                             dbConnector.sqlInsert(sql);
                         }else{
                             isTeacherField.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -72,7 +74,7 @@ public class App {
                                 if(resultSet.getString("username").equals(usernameGiven)){
                                     isTeacher = Integer.parseInt(resultSet.getString("isTeacher"));
 
-                                    if(resultSet.getString("password").equals(passwordGiven)){
+                                    if(sCrypt.matches(passwordGiven, resultSet.getString("password"))){
                                         System.out.println("Bejelentkezés sikeres");
                                         setUserId(resultSet.getInt("ID"));
                                         System.out.println(getUserId());
@@ -80,7 +82,7 @@ public class App {
                                             JFrame frameTanar = new JFrame("Tárgy kiírás");
                                             frameTanar.getContentPane().add(new TanarForm().getPanelTanar());
                                             frameTanar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                            frameTanar.setSize(300,400);
+                                            frameTanar.setSize(500,400);
                                             frameTanar.setLocationRelativeTo(null);
                                             panelBelepes.setVisible(false);
                                             frameTanar.setVisible(true);
@@ -88,7 +90,7 @@ public class App {
                                             JFrame frameHallgato = new JFrame("Tárgy felvétel");
                                             frameHallgato.getContentPane().add(new HallgatoForm().getPanelHallgato());
                                             frameHallgato.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                            frameHallgato.setSize(300,400);
+                                            frameHallgato.setSize(500,400);
                                             frameHallgato.setLocationRelativeTo(null);
                                             panelBelepes.setVisible(false);
                                             frameHallgato.setVisible(true);

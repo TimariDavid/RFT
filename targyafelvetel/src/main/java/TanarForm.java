@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,9 +18,21 @@ public class TanarForm {
                 String subjectName = targynevField.getText();
                 String whatTime = idoField.getText();
 
-                String sql = "INSERT INTO subjects (name, what_time) VALUES ("+"'"+subjectName+"'"+", "+"'"+whatTime+"'"+")";
-                dbConnector = Db.getInstance();
-                dbConnector.sqlInsert(sql);
+                if(targynevField.getText().isEmpty() || idoField.getText().isEmpty()){
+                    if(targynevField.getText().isEmpty()){
+                        targynevField.setBorder(BorderFactory.createLineBorder(Color.red));
+                    }else{
+                        targynevField.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+                    if(idoField.getText().isEmpty()){
+                        idoField.setBorder(BorderFactory.createLineBorder(Color.red));
+                    }else{
+                        idoField.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+                }else{
+                    dbConnector = Db.getInstance();
+                    dbConnector.sqlInsert("INSERT INTO subjects (name, what_time) VALUES ("+"'"+subjectName+"'"+", "+"'"+whatTime+"'"+")");
+                }
             }
         });
     }

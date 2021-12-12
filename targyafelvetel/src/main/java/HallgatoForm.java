@@ -71,9 +71,9 @@ public class HallgatoForm {
                     int sqlId = entry.getKey();
                     ResultSet resultSet = (ResultSet) dbConnector.sqlSelect("SELECT what_time FROM subjects WHERE ID = "+sqlId+";");
                     try {
-                        String sad = resultSet.getString("what_time");
-                        System.out.println(sad);
-                        //labelInfo.setText(resultSet.getString("what_time"));
+                        if(resultSet.first()) {
+                            labelInfo.setText(resultSet.getString("what_time"));
+                        }
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
