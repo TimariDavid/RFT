@@ -14,6 +14,7 @@ public class HallgatoForm {
     private JButton buttonFelvesz;
     private JPanel panelHallgato;
     private JButton buttonReload;
+    private JLabel labelInfo;
     private Db dbConnector;
 
     public HallgatoForm() {
@@ -59,6 +60,22 @@ public class HallgatoForm {
                     if(entry.getValue().equals(subjectName)){
                         String sql = "INSERT INTO connector (user_id, subject_id) VALUES ("+"'"+hallgato.getUserId()+"'"+", "+"'"+entry.getKey()+"'"+")";
                         dbConnector.sqlInsert(sql);
+                    }
+                }
+            }
+        });
+        subjectsList.getSelectionModel().addListSelectionListener(e -> {
+            String targy = subjectsList.getSelectedValue().toString();
+            for (Map.Entry<Integer, String> entry : targyak.entrySet()){
+                if(entry.getValue().equals(targy)){
+                    int sqlId = entry.getKey();
+                    ResultSet resultSet = (ResultSet) dbConnector.sqlSelect("SELECT what_time FROM subjects WHERE ID = "+sqlId+";");
+                    try {
+                        String sad = resultSet.getString("what_time");
+                        System.out.println(sad);
+                        //labelInfo.setText(resultSet.getString("what_time"));
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
                     }
                 }
             }

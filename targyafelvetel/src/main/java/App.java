@@ -80,7 +80,7 @@ public class App {
                                             JFrame frameTanar = new JFrame("Tárgy kiírás");
                                             frameTanar.getContentPane().add(new TanarForm().getPanelTanar());
                                             frameTanar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                            frameTanar.pack();
+                                            frameTanar.setSize(300,400);
                                             frameTanar.setLocationRelativeTo(null);
                                             panelBelepes.setVisible(false);
                                             frameTanar.setVisible(true);
@@ -88,7 +88,7 @@ public class App {
                                             JFrame frameHallgato = new JFrame("Tárgy felvétel");
                                             frameHallgato.getContentPane().add(new HallgatoForm().getPanelHallgato());
                                             frameHallgato.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                            frameHallgato.pack();
+                                            frameHallgato.setSize(300,400);
                                             frameHallgato.setLocationRelativeTo(null);
                                             panelBelepes.setVisible(false);
                                             frameHallgato.setVisible(true);
@@ -128,7 +128,6 @@ public class App {
         JFrame frame = new JFrame("App");
         frame.getContentPane().add(new App().panelBelepes);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setSize(400,300);
